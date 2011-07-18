@@ -19,16 +19,14 @@ Recurry.DEFAULT_UNTIL_ADD_Z = Recurry.DEFAULT_UNTIL_ADD_Z || true;
 	"Global" functions
 	==================	*/
 
-// Check value types
-// TODO: is there a need for these?
-Recurry.isNumber = function(n) { return (((typeof n === typeof 1.0) || (n instanceof Number)) && (!isNaN(n))) };
+// Check value types (taken from JSTypes 1.00)
+Recurry.isNumber = function(n) { return (((typeof n === typeof 1) || (n instanceof Number)) && (!isNaN(n))) };
 Recurry.isInteger = function(i) { return ((Recurry.isNumber(i)) && (Math.floor(i) == i)) };
 Recurry.isString = function(s) { return ((typeof s === typeof "") || (s instanceof String)) };
 Recurry.isBoolean = function(b) { return ((typeof b === typeof true) || (b instanceof Boolean)) };
 Recurry.isArray = function(a) { return a instanceof Array };
 Recurry.isUndefined = function(u) { return typeof u === "undefined" };
-Recurry.isDefined = function(u) { return !Recurry.isUndefined(u) };
-// If you're looking for it, isNaN() is built into JavaScript
+Recurry.isDefined = function(d) { return typeof d !== "undefined" };
 
 // Does X contain Y? Works for strings and arrays.
 Recurry.contains = function(searchIn, searchFor) { return !!~searchIn.indexOf(searchFor) };
