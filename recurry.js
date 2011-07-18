@@ -20,7 +20,7 @@ Recurry.DEFAULT_UNTIL_ADD_Z = Recurry.DEFAULT_UNTIL_ADD_Z || true;
 	==================	*/
 
 // Check value types
-// TODO: no need for these?
+// TODO: is there a need for these?
 Recurry.isNumber = function(n) { return (((typeof n === typeof 1.0) || (n instanceof Number)) && (!isNaN(n))) };
 Recurry.isInteger = function(i) { return ((Recurry.isNumber(i)) && (Math.floor(i) == i)) };
 Recurry.isString = function(s) { return ((typeof s === typeof "") || (s instanceof String)) };
