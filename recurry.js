@@ -19,6 +19,7 @@ Recurry.DEFAULT_FREQ = "DAILY";
 	==================	*/
 
 // Check value types
+// TODO: no need for these?
 Recurry.isNumber = function(n) { return (((typeof n === typeof 1.0) || (n instanceof Number)) && (!isNaN(n))) };
 Recurry.isInteger = function(i) { return ((Recurry.isNumber(i)) && (Math.floor(i) == i)) };
 Recurry.isString = function(s) { return ((typeof s === typeof "") || (s instanceof String)) };
@@ -33,7 +34,14 @@ Recurry.contains = function(searchIn, searchFor) { return !!~searchIn.indexOf(se
 
 // Leading zeros
 Recurry.leadingZeros = function(number, max) {
-	
+	var output = "";
+	number = String(number);
+	var zeros = max - number.length;
+	for (var i = 0; i < zeros; i ++) {
+		output += "0";
+	}
+	output += number;
+	return output;
 };
 
 // Make a property
@@ -50,9 +58,13 @@ Recurry.makeProperty = function(key, value) {
 	====	*/
 
 Recurry.Rule = function(f) {
-	this.freq = f || Recurry.DEFAULT_FREQ;
+	this.freq = Recurry.DEFAULT_FREQ;
 	this.count;
 	this.until;
+	this.interval;
+	
+	if (Recurry.isDefined(f))
+		this.setFrequency(f);
 };
 
 /*	========
@@ -78,6 +90,8 @@ Recurry.Rule.prototype = {
 	setUntil: function(u) {
 		if (Recurry.isUndefined(this.getCount())) {
 			if (Recurry.isString(u)) {
+				
+				// It's already a string, let's make sure it's up to snuff
 				if (!Recurry.contains(u, "T"))
 					throw new Error(u + " is not in the proper date format; needs a T separator");
 				var months = u.substr(4, 2);
@@ -96,19 +110,24 @@ Recurry.Rule.prototype = {
 				if (!((Recurry.isInteger(Number(seconds))) && (0 <= seconds) && (seconds < 60)))
 					throw new Error(seconds + " is not a valid second");
 				this.until = u;
-			} else if (u instanceof Date) {
-				var year = String(u.getFullYear());
-				var month = String(u.getMonth() + 1);
-				var day = String(u.getDate());
-				var hour = String(u.getHours());
-				var minute = String(u.getMinutes());
-				var second = String(u.getSeconds());
 				
+			} else if (u instanceof Date) {
+				
+				// Parse the Date into a String
+				var year = Recurry.leadingZeros(String(u.getFullYear()), 4);
+				var month = Recurry.leadingZeros(String(u.getMonth() + 1), 2);
+				var day = Recurry.leadingZeros(String(u.getDate()), 2);
+				var hour = Recurry.leadingZeros(String(u.getHours()), 2);
+				var minute = Recurry.leadingZeros(String(u.getMinutes()), 2);
+				var second = Recurry.leadingZeros(String(u.getSeconds()), 2);
 				var x = year + month + day + "T" + hour + minute + second;
-				console.log(x);
 				this.setUntil(x);
+				
 			} else {
+			
+				// I do not want this garbage that you give me
 				throw new TypeError(typeof u + " " + u + " is not a valid UNTIL");
+				
 			}
 		} else {
 			throw new Error("Cannot set UNTIL; mutually exclusive with COUNT");
@@ -122,6 +141,7 @@ Recurry.Rule.prototype = {
 	getCount: function() { return this.count },
 	setCount: function(c) {
 		if (Recurry.isUndefined(this.getUntil())) {
+			c = parseFloat(c);
 			if (Recurry.isInteger(c)) {
 				this.count = c;
 			} else {
@@ -135,7 +155,19 @@ Recurry.Rule.prototype = {
 		this.count = void(0);
 	},
 	
-	// TODO: Interval
+	// Interval
+	getInterval: function() { return this.interval },
+	setInterval: function(i) {
+		i = parseFloat(i);
+		if (Recurry.isInteger(i)) {
+			this.interval = i;
+		} else {
+			throw new TypeError(typeof i + " " + i + " is not a valid count");
+		}
+	},
+	resetInterval: function() {
+		this.interval = void(0);
+	},
 	
 	// TODO: BYxxx
 	
@@ -152,6 +184,8 @@ Recurry.Rule.prototype = {
 			output += Recurry.makeProperty("COUNT", this.getCount());
 		if (Recurry.isDefined(this.getUntil()))
 			output += Recurry.makeProperty("UNTIL", this.getUntil());
+		if (Recurry.isDefined(this.getInterval()))
+			output += Recurry.makeProperty("INTERVAL", this.getInterval());
 		
 		// TODO: remove last semicolon
 		

@@ -11,10 +11,12 @@
 	
 	<script>
 	
-	var rule = new Recurry.Rule();
-	rule.setFrequency("weekly");
-	rule.setUntil("19971224T000000");
-	document.write(rule.toString());
+		var rule = new Recurry.Rule();
+		rule.setFrequency("weekly");
+		var ends = new Date(2050, 0, 22);
+		rule.setUntil(ends);
+		rule.setInterval(10);
+		document.write(rule.toString());
 	
 	</script>
 	
