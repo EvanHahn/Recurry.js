@@ -12,7 +12,8 @@ var Recurry = Recurry || {};
 	Defaults
 	========	*/
 
-Recurry.DEFAULT_FREQ = "DAILY";
+Recurry.DEFAULT_FREQ = Recurry.DEFAULT_FREQ || "DAILY";
+Recurry.DEFAULT_UNTIL_ADD_Z = Recurry.DEFAULT_UNTIL_ADD_Z || true;
 
 /*	==================
 	"Global" functions
@@ -61,6 +62,7 @@ Recurry.Rule = function(f) {
 	this.freq = Recurry.DEFAULT_FREQ;
 	this.count;
 	this.until;
+	this.untilAddZ = Recurry.DEFAULT_UNTIL_ADD_Z;
 	this.interval;
 	
 	if (Recurry.isDefined(f))
@@ -112,6 +114,7 @@ Recurry.Rule.prototype = {
 				var seconds = u.substr(13, 2);
 				if (!((Recurry.isInteger(Number(seconds))) && (0 <= seconds) && (seconds < 60)))
 					throw new Error(seconds + " is not a valid second");
+				
 				this.until = u;
 				
 			} else if (u instanceof Date) {
@@ -123,8 +126,9 @@ Recurry.Rule.prototype = {
 				var hour = Recurry.leadingZeros(String(u.getHours()), 2);
 				var minute = Recurry.leadingZeros(String(u.getMinutes()), 2);
 				var second = Recurry.leadingZeros(String(u.getSeconds()), 2);
-				var x = year + month + day + "T" + hour + minute + second;
-				this.setUntil(x);
+				var output = year + month + day + "T" + hour + minute + second;
+				if (this.untilAddZ) output += "Z";
+				this.setUntil(output);
 				
 			} else {
 			
