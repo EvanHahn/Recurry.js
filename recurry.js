@@ -84,6 +84,9 @@ Recurry.Rule.prototype = {
 			throw new TypeError(typeof f + " " + f + " is not a valid frequency");
 		}
 	},
+	resetFrequency: function() {
+		this.freq = Recurry.DEFAULT_FREQ;
+	},
 	
 	// Until
 	getUntil: function() { return this.until },
