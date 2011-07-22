@@ -31,7 +31,7 @@ Recurry.isDefined = function(d) { return typeof d !== "undefined" };
 // Does X contain Y? Works for strings and arrays.
 Recurry.contains = function(searchIn, searchFor) { return !!~searchIn.indexOf(searchFor) };
 
-// Leading zeros
+// Leading zeros (TODO: there's got to be a better way than this!)
 Recurry.leadingZeros = function(number, max) {
 	var output = "";
 	number = String(number);
@@ -62,6 +62,7 @@ Recurry.Rule = function(f) {
 	this.until;
 	this.untilAddZ = Recurry.DEFAULT_UNTIL_ADD_Z;
 	this.interval;
+	this.bySecond;
 	
 	if (Recurry.isDefined(f))
 		this.setFrequency(f);
@@ -175,6 +176,21 @@ Recurry.Rule.prototype = {
 	},
 	
 	// TODO: BYxxx
+	
+	// By second list
+	getSecondList: function() { return this.bySecond },
+	setSecondList: function(l) {
+		if (Recurry.isArray(l)) {
+		
+			// It's an array of 
+		
+		} else {
+		
+		}
+	},
+	resetSecondList: function() {
+		this.bySecond = void(0);
+	},
 	
 	// TODO: weekst
 	
