@@ -1,5 +1,7 @@
 # Recurry.js - version 0.50 #
 
+**This has been abandoned. Check out [rrule.js](https://github.com/jkbr/rrule).**
+
 Recurry.js is a JavaScript library that allows you to create iCalendar-compliant (RFC 5545) recurrence rules.
 
 Here's an example:
